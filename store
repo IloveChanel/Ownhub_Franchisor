@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Buscemi's — Store Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito+Sans:wght@400;600;700;800&family=Yellowtail&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/ownhub.css" />
+  <style>
+    @media print {
+      .store-banner, .app-header, .admin-nav, .dash-header, .summary-row, .order-right, .page-head { display: none !important; }
+      #print-ticket { display: block !important; }
+      body { background: #fff; }
+    }
+    #print-ticket { display: none; font-family: "Courier New", monospace; width: 80mm; padding: 12px; }
+  </style>
+</head>
+<body>
+  <div id="shell"></div>
+  <main class="page">
+    <div class="summary-row" id="summary-row"></div>
+    <div id="orders-list"></div>
+  </main>
+  <div id="print-ticket"></div>
+
+  <script src="js/app.js"></script>
+  <script>
+    if (!OwnHub.requireAuth()) throw new Error("auth");
+    const id = OwnHub.qs("id") || "HARRISON-001";
+    const store = OwnHub.findStore(id) || { id, name: OwnHub.qs("name") || "Harrison Township", status: "live" };
+    document.title = "Buscemi's — " + store.name;
+    document.getElementById("shell").innerHTML = OwnHub.storeHeader(store, "orders");
+
+    let orders = OwnHub.ordersFor(store.id);
+    let activeFilter = "all";
+
+    function setFilter(f) { activeFilter = f; render(); }
+    function setStatus(oid, status) {
+      const o = orders.find(x => x.id === oid);
+      if (o) { o.status = status; OwnHub.saveOrders(store.id, orders); render(); }
+    }
+    function printTicket(oid) {
+      const o = orders.find(x => x.id === oid);
+      if (!o) return;
+      document.getElementById("print-ticket").innerHTML = `
+        <div style="text-align:center">
+          <strong>BUSCEMI'S</strong><br>${store.name}<br>${store.phone || ""}
+          <hr>
+          ORDER #${o.id} · ${o.time}<br>${o.fulfill.toUpperCase()}
+          <hr>
+          ${o.customer}<br>${o.phone || ""}${o.address ? "<br>" + o.address : ""}
+          <hr>
+          ${o.items.map(i => i.name + (i.mods.length ? "<br>  " + i.mods.join(", ") : "")).join("<br>")}
+          <hr>
+          TOTAL ${OwnHub.money2(o.total)}<br>Thank you
+        </div>`;
+      window.print();
+      setStatus(oid, "printed");
+    }
+
+    function render() {
+      const counts = { all: orders.length, open: 0, printed: 0, fulfilled: 0 };
+      orders.forEach(o => counts[o.status]++);
+      document.getElementById("summary-row").innerHTML = ["all","open","printed","fulfilled"].map(k => `
+        <div class="summary-pill ${activeFilter===k?"active":""}" onclick="setFilter('${k}')">
+          <div class="num">${counts[k]}</div><div class="lbl">${k}</div>
+        </div>`).join("");
+
+      const list = orders.filter(o => activeFilter === "all" || o.status === activeFilter);
+      document.getElementById("orders-list").innerHTML = list.map(o => `
+        <article class="order-card">
+          <div class="order-left">
+            <h3>#${o.id}</h3>
+            <div class="order-meta">
+              <span class="badge ${o.fulfill}">${o.fulfill}</span>
+              <span>${o.time}</span>
+              <strong>${o.customer}</strong>
+            </div>
+            ${o.items.map(i => `<div class="item-line">${i.name}${i.mods.length ? ` <em>— ${i.mods.join(", ")}</em>` : ""}</div>`).join("")}
+            <div class="total">${OwnHub.money2(o.total)}</div>
+            <div class="contact">${o.phone || ""}${o.address ? " · " + o.address : ""}${o.email ? " · " + o.email : ""}${o.subscribed ? " · Opted in — coupon list" : ""}</div>
+          </div>
+          <div class="order-right">
+            <span class="badge ${o.status}">${o.status}</span>
+            ${o.status !== "fulfilled" ? `<button class="action-btn print" onclick="printTicket(${o.id})">Print Ticket</button>` : ""}
+            ${o.status !== "fulfilled" ? `<button class="action-btn fulfill" onclick="setStatus(${o.id},'fulfilled')">Mark Fulfilled</button>` : `<button class="action-btn reopen" onclick="setStatus(${o.id},'open')">Reopen</button>`}
+          </div>
+        </article>`).join("") || `<div class="empty-state">No orders in this view.</div>`;
+    }
+    render();
+  </script>
+</body>
+</html>
