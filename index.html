@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Buscemi's — OwnHub Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito+Sans:wght@400;600;700;800&family=Yellowtail&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/ownhub.css" />
+</head>
+<body class="auth">
+  <div class="auth-card">
+    <span class="logo-script">Buscemi's</span>
+    <div class="auth-kicker">OwnHub · Franchisor</div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" type="button">Owner Login</button>
+      <button class="auth-tab" id="tab-help" type="button">Access</button>
+    </div>
+
+    <div id="login-view">
+      <label for="email">Owner email</label>
+      <input id="email" type="email" value="owner@buscemis.com" autocomplete="username" />
+      <label for="pin">Owner PIN</label>
+      <input id="pin" type="password" value="2468" autocomplete="current-password" />
+      <div class="err" id="login-error">Email or PIN is not recognized.</div>
+      <button class="btn btn-red" type="button" onclick="doLogin()">Enter OwnHub</button>
+      <p class="hint">Demo: owner@buscemis.com · PIN 2468</p>
+    </div>
+
+    <div id="help-view" style="display:none">
+      <p class="desc" style="color:var(--ink);line-height:1.55;font-size:14px">
+        OwnHub is the franchise-owner layer above each store POS.
+        Franchisees keep using their store login
+        (<a href="https://ilovechanel.github.io/POS_dashboard/" style="color:var(--red);font-weight:800">POS dashboard</a>).
+        You use this hub to see every location, open a store as they see it,
+        add new stores, and roll up accounting.
+      </p>
+      <label>Store-level POS (franchisee)</label>
+      <p class="hint" style="text-align:left;margin:0">Any Store ID + PIN 1234 on the existing dashboard.</p>
+      <button class="btn btn-red" type="button" onclick="show('login')">Back to login</button>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    if (OwnHub.isAuthed()) location.replace("dashboard.html");
+
+    function show(which) {
+      document.getElementById("login-view").style.display = which === "login" ? "block" : "none";
+      document.getElementById("help-view").style.display = which === "help" ? "block" : "none";
+      document.getElementById("tab-login").classList.toggle("active", which === "login");
+      document.getElementById("tab-help").classList.toggle("active", which === "help");
+    }
+    document.getElementById("tab-login").onclick = () => show("login");
+    document.getElementById("tab-help").onclick = () => show("help");
+
+    function doLogin() {
+      const ok = OwnHub.login(document.getElementById("email").value, document.getElementById("pin").value);
+      if (!ok) {
+        document.getElementById("login-error").style.display = "block";
+        return;
+      }
+      location.href = "dashboard.html";
+    }
+    document.getElementById("pin").addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
+  </script>
+</body>
+</html>
