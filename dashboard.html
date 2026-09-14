@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OwnHub — All Stores</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito+Sans:wght@400;600;700;800&family=Yellowtail&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/ownhub.css" />
+</head>
+<body>
+  <div id="shell"></div>
+  <main class="page">
+    <div class="page-head">
+      <div>
+        <h1>All stores</h1>
+        <p>Click a card to open that location exactly as the franchisee sees it.</p>
+      </div>
+      <a class="btn btn-red btn-sm" href="add-store.html">+ Add store</a>
+    </div>
+
+    <div class="kpi-row" id="kpis"></div>
+
+    <div class="toolbar">
+      <input class="search" id="q" placeholder="Search name, city, or Store ID" />
+      <select id="status" style="max-width:180px">
+        <option value="">All statuses</option>
+        <option value="live">Live</option>
+        <option value="onboarding">Onboarding</option>
+        <option value="offline">Offline</option>
+      </select>
+    </div>
+
+    <div class="store-grid" id="grid"></div>
+  </main>
+  <div class="toast" id="toast"></div>
+
+  <script src="js/app.js"></script>
+  <script>
+    if (!OwnHub.requireAuth()) throw new Error("auth");
+    document.getElementById("shell").innerHTML = OwnHub.header("dashboard");
+
+    const stores = OwnHub.loadStores();
+
+    function renderKpis() {
+      const live = stores.filter(s => s.status === "live");
+      const sales = stores.reduce((a, s) => a + s.salesToday, 0);
+      const week = stores.reduce((a, s) => a + s.salesWeek, 0);
+      const open = stores.reduce((a, s) => a + s.openOrders, 0);
+      document.getElementById("kpis").innerHTML = `
+        <div class="kpi"><div class="lbl">Locations</div><div class="num">${stores.length}</div><div class="sub">${live.length} live · ${stores.length - live.length} not live</div></div>
+        <div class="kpi"><div class="lbl">Sales today</div><div class="num">${OwnHub.money(sales)}</div><div class="sub"><span class="up">Network rollup</span></div></div>
+        <div class="kpi"><div class="lbl">Sales this week</div><div class="num">${OwnHub.money(week)}</div><div class="sub">All franchisees</div></div>
+        <div class="kpi"><div class="lbl">Open tickets</div><div class="num">${open}</div><div class="sub">Across live stores</div></div>`;
+    }
+
+    function render() {
+      const q = document.getElementById("q").value.toLowerCase().trim();
+      const st = document.getElementById("status").value;
+      const list = stores.filter(s => {
+        const hay = (s.name + " " + s.id + " " + s.address + " " + s.owner).toLowerCase();
+        return (!q || hay.includes(q)) && (!st || s.status === st);
+      });
+      document.getElementById("grid").innerHTML = list.map(s => `
+        <article class="store-card" onclick="openStore('${s.id}')">
+          <div class="top">
+            <h3>${s.name}</h3>
+            <span class="badge ${s.status}">${s.status}</span>
+          </div>
+          <div><span class="sid">${s.id}</span></div>
+          <div class="meta">${s.address}<br>Franchisee: ${s.owner}</div>
+          <div class="card-stats">
+            <div><strong>${OwnHub.money(s.salesToday)}</strong>Today</div>
+            <div><strong>${s.openOrders}</strong>Open orders</div>
+          </div>
+        </article>`).join("") || `<div class="empty-state">No stores match that filter.</div>`;
+    }
+
+    function openStore(id) {
+      const s = stores.find(x => x.id === id);
+      location.href = "store.html?id=" + encodeURIComponent(s.id) + "&name=" + encodeURIComponent(s.name);
+    }
+
+    document.getElementById("q").addEventListener("input", render);
+    document.getElementById("status").addEventListener("change", render);
+    renderKpis();
+    render();
+  </script>
+</body>
+</html>
