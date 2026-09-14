@@ -1,70 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Buscemi's — OwnHub Login</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito+Sans:wght@400;600;700;800&family=Yellowtail&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/ownhub.css" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Buscemi's — OwnHub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito+Sans:wght@400;600;700;800&family=Yellowtail&display=swap" rel="stylesheet"/>
+<style>
+:root{--red:#C8102E;--red-deep:#970B22;--cream:#FFF8EC;--wood:#5C3A22;--wood-dark:#432A18;--wood-bar:#3A2414;--gold:#F4B942;--ink:#2B1B10;--green:#3B7A3B;--green-bg:#E7F3E7;--amber:#B5790F;--amber-bg:#FDF1DA;--blue-bg:#E4EEFB;--gray:#8A7460;--gray-bg:#F1ECE3;--line:rgba(43,27,16,.14);--shadow:0 18px 40px rgba(43,21,8,.18);--radius:16px}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{font-family:"Nunito Sans",system-ui,sans-serif;color:var(--ink);background:#f4ebe0}
+h1,h2,h3,.num{font-family:"Fredoka",system-ui,sans-serif}
+a{color:inherit;text-decoration:none}
+.logo-script{font-family:"Yellowtail",cursive;color:var(--red);font-size:42px;line-height:1}
+body.auth{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:30px;background:linear-gradient(135deg,var(--wood),var(--wood-dark))}
+.auth-card{width:100%;max-width:420px;background:var(--cream);border-radius:18px;padding:36px 32px 28px;box-shadow:0 24px 60px rgba(0,0,0,.35)}
+.auth-card .logo-script{text-align:center;display:block;margin-bottom:6px}
+.auth-kicker{text-align:center;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gray);font-weight:700;margin-bottom:22px}
+label{display:block;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;margin:12px 0 6px}
+input,select{width:100%;border:1px solid var(--line);background:#fff;border-radius:10px;padding:12px 14px;font:15px/1.4 "Nunito Sans",sans-serif;color:var(--ink);outline:none}
+input:focus,select:focus{border-color:var(--red)}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:0;cursor:pointer;font-family:inherit;font-weight:800;border-radius:10px;padding:12px 18px}
+.btn-red{background:var(--red);color:#fff;width:100%;margin-top:16px}
+.btn-red:hover{background:var(--red-deep)}
+.btn-wood{background:var(--wood);color:#fff}
+.btn-sm{padding:8px 12px;font-size:13px;width:auto;margin:0}
+.hint{text-align:center;margin-top:14px;font-size:12px;color:var(--gray)}
+.err{display:none;color:var(--red);font-size:13px;font-weight:700;margin-top:10px}
+.app-header{background:var(--wood-bar);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:14px 28px;gap:16px}
+.app-header .brand{display:flex;align-items:baseline;gap:12px}
+.app-header .logo-script{font-size:32px;color:#fff}
+.hub-tag{font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:800;color:var(--gold)}
+.header-right{display:flex;align-items:center;gap:14px;font-size:14px}
+.status-live{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.08);border-radius:999px;padding:6px 12px;font-weight:700}
+.status-live .dot{width:8px;height:8px;border-radius:50%;background:#5ad35a;box-shadow:0 0 0 4px rgba(90,211,90,.18)}
+.logout-btn{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:7px 12px;font-weight:700;cursor:pointer;font-family:inherit}
+.admin-nav{background:var(--wood);display:flex;gap:4px;padding:0 22px;overflow-x:auto}
+.admin-nav a{color:rgba(255,255,255,.72);font-weight:700;padding:14px 16px;border-bottom:3px solid transparent;white-space:nowrap;font-size:14px}
+.admin-nav a.active{color:#fff;border-bottom-color:var(--gold)}
+.page{max-width:1240px;margin:0 auto;padding:28px 22px 60px}
+.page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.page-head h1{font-size:30px;font-weight:600}
+.page-head p{color:var(--gray);margin-top:4px}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.kpi{background:var(--cream);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px}
+.kpi .lbl{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--gray)}
+.kpi .num{font-size:28px;margin-top:4px}
+.kpi .sub{font-size:12px;color:var(--gray);margin-top:4px}
+.store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.store-card{background:var(--cream);border:1px solid var(--line);border-radius:var(--radius);padding:18px;cursor:pointer;display:flex;flex-direction:column;gap:10px;min-height:210px}
+.store-card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.store-card .top{display:flex;justify-content:space-between;gap:8px}
+.store-card h3{font-size:20px;font-weight:600}
+.sid{font-family:ui-monospace,Menlo,monospace;font-size:11px;background:var(--gray-bg);border:1px solid var(--line);padding:3px 8px;border-radius:999px;font-weight:700}
+.badge{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:4px 8px;border-radius:999px}
+.badge.live{background:var(--green-bg);color:var(--green)}
+.badge.offline{background:var(--gray-bg);color:var(--gray)}
+.badge.onboarding{background:var(--amber-bg);color:var(--amber)}
+.badge.open{background:var(--amber-bg);color:var(--amber)}
+.badge.printed{background:var(--blue-bg);color:#2a5a8c}
+.badge.fulfilled{background:var(--green-bg);color:var(--green)}
+.badge.pickup{background:#efe4d3;color:var(--wood)}
+.badge.delivery{background:#fde4e8;color:var(--red-deep)}
+.meta{font-size:13px;color:var(--gray);line-height:1.45}
+.card-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:auto;padding-top:8px;border-top:1px solid var(--line)}
+.card-stats div{font-size:12px;color:var(--gray)}
+.card-stats strong{display:block;color:var(--ink);font-size:16px;font-family:"Fredoka",sans-serif}
+.panel{background:var(--cream);border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.panel h2{font-size:20px;margin-bottom:6px}
+.panel .desc{color:var(--gray);font-size:14px;margin-bottom:16px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}
+.form-grid .full{grid-column:1/-1}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);padding:10px 8px;border-bottom:1px solid var(--line)}
+td{padding:12px 8px;border-bottom:1px solid var(--line)}
+.toast{position:fixed;right:18px;bottom:18px;background:var(--ink);color:#fff;padding:12px 16px;border-radius:10px;font-weight:700;display:none;z-index:50}
+.store-banner{background:var(--gold);color:var(--ink);font-size:13px;font-weight:800;padding:8px 22px;display:flex;justify-content:space-between}
+.dash-header{background:var(--wood-bar);color:#fff;display:flex;justify-content:space-between;align-items:center;padding:16px 28px}
+.dash-header small{display:block;color:var(--gold);font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+.summary-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.summary-pill{background:var(--cream);border:2px solid transparent;border-radius:12px;padding:10px 16px;cursor:pointer;min-width:110px}
+.summary-pill .num{font-size:24px}
+.summary-pill .lbl{font-size:12px;color:var(--gray);font-weight:700;text-transform:uppercase}
+.summary-pill.active{border-color:var(--red)}
+.order-card{background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px;display:flex;justify-content:space-between;gap:16px}
+.order-meta{display:flex;gap:8px;align-items:center;margin:6px 0 8px;flex-wrap:wrap}
+.item-line{font-size:14px}
+.item-line em{color:var(--gray);font-style:normal;font-size:13px}
+.total{color:var(--red);font-weight:800;margin-top:8px}
+.contact{font-size:13px;color:var(--gray);margin-top:6px}
+.order-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;min-width:150px}
+.action-btn{border:0;border-radius:8px;padding:8px 12px;font-weight:800;cursor:pointer;font-family:inherit;width:100%}
+.action-btn.fulfill{background:var(--green);color:#fff}
+.action-btn.reopen{background:var(--gray-bg);color:var(--ink);border:1px solid var(--line)}
+.empty-state{text-align:center;color:var(--gray);padding:40px 10px}
+@media(max-width:860px){.kpi-row,.form-grid{grid-template-columns:1fr 1fr}.order-card{flex-direction:column}.order-right{align-items:stretch}}
+@media(max-width:620px){.kpi-row,.form-grid{grid-template-columns:1fr}}
+</style>
 </head>
-<body class="auth">
-  <div class="auth-card">
-    <span class="logo-script">Buscemi's</span>
-    <div class="auth-kicker">OwnHub · Franchisor</div>
-
-    <div class="auth-tabs">
-      <button class="auth-tab active" id="tab-login" type="button">Owner Login</button>
-      <button class="auth-tab" id="tab-help" type="button">Access</button>
-    </div>
-
-    <div id="login-view">
-      <label for="email">Owner email</label>
-      <input id="email" type="email" value="owner@buscemis.com" autocomplete="username" />
-      <label for="pin">Owner PIN</label>
-      <input id="pin" type="password" value="2468" autocomplete="current-password" />
-      <div class="err" id="login-error">Email or PIN is not recognized.</div>
-      <button class="btn btn-red" type="button" onclick="doLogin()">Enter OwnHub</button>
-      <p class="hint">Demo: owner@buscemis.com · PIN 2468</p>
-    </div>
-
-    <div id="help-view" style="display:none">
-      <p class="desc" style="color:var(--ink);line-height:1.55;font-size:14px">
-        OwnHub is the franchise-owner layer above each store POS.
-        Franchisees keep using their store login
-        (<a href="https://ilovechanel.github.io/POS_dashboard/" style="color:var(--red);font-weight:800">POS dashboard</a>).
-        You use this hub to see every location, open a store as they see it,
-        add new stores, and roll up accounting.
-      </p>
-      <label>Store-level POS (franchisee)</label>
-      <p class="hint" style="text-align:left;margin:0">Any Store ID + PIN 1234 on the existing dashboard.</p>
-      <button class="btn btn-red" type="button" onclick="show('login')">Back to login</button>
-    </div>
-  </div>
-
-  <script src="js/app.js"></script>
-  <script>
-    if (OwnHub.isAuthed()) location.replace("dashboard.html");
-
-    function show(which) {
-      document.getElementById("login-view").style.display = which === "login" ? "block" : "none";
-      document.getElementById("help-view").style.display = which === "help" ? "block" : "none";
-      document.getElementById("tab-login").classList.toggle("active", which === "login");
-      document.getElementById("tab-help").classList.toggle("active", which === "help");
-    }
-    document.getElementById("tab-login").onclick = () => show("login");
-    document.getElementById("tab-help").onclick = () => show("help");
-
-    function doLogin() {
-      const ok = OwnHub.login(document.getElementById("email").value, document.getElementById("pin").value);
-      if (!ok) {
-        document.getElementById("login-error").style.display = "block";
-        return;
-      }
-      location.href = "dashboard.html";
-    }
-    document.getElementById("pin").addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
-  </script>
+<body>
+<div id="app"></div>
+<div class="toast" id="toast"></div>
+<script>
+(function(){
+const AUTH_KEY="ownhub.auth.v1",STORE_KEY="ownhub.stores.v1",PIN="2468";
+const OWNER={email:"owner@buscemis.com",name:"Tony Buscemi"};
+const SEED=[
+{id:"HARRISON-001",name:"Harrison Township",address:"29965 S River Rd, Harrison Twp, MI 48045",phone:"(586) 468-4779",owner:"Michelle Vance",status:"live",opened:"2018-04-12",salesToday:4280,salesWeek:27410,openOrders:3,royaltyDue:856},
+{id:"UTICA-014",name:"Utica — Hall Road",address:"45450 Hall Rd, Utica, MI 48317",phone:"(586) 731-2200",owner:"Paul Buscemi Jr.",status:"live",opened:"1972-06-01",salesToday:6125,salesWeek:40110,openOrders:5,royaltyDue:1225},
+{id:"ROSEVILLE-008",name:"Roseville — Gratiot",address:"30360 Gratiot Ave, Roseville, MI 48066",phone:"(586) 294-1100",owner:"Nash K.",status:"live",opened:"1994-09-18",salesToday:3890,salesWeek:25100,openOrders:2,royaltyDue:778},
+{id:"EASTPOINTE-001",name:"Eastpointe — Original",address:"Gratiot & Toepfer, Eastpointe, MI 48021",phone:"(586) 775-0100",owner:"Family Trust",status:"live",opened:"1956-03-01",salesToday:2740,salesWeek:18840,openOrders:1,royaltyDue:548},
+{id:"WARREN-022",name:"Warren",address:"28700 Van Dyke, Warren, MI 48093",phone:"(586) 573-4411",owner:"Lena Romano",status:"live",opened:"2003-11-02",salesToday:3310,salesWeek:22005,openOrders:4,royaltyDue:662},
+{id:"STERLING-031",name:"Sterling Heights",address:"13800 15 Mile Rd, Sterling Heights, MI 48312",phone:"(586) 268-9090",owner:"Chris D'Angelo",status:"onboarding",opened:"2026-08-20",salesToday:0,salesWeek:1240,openOrders:0,royaltyDue:0},
+{id:"CLINTON-019",name:"Clinton Township",address:"41800 Groesbeck Hwy, Clinton Twp, MI 48036",phone:"(586) 463-2200",owner:"Angela Reyes",status:"live",opened:"2008-05-14",salesToday:2975,salesWeek:19660,openOrders:2,royaltyDue:595},
+{id:"MACOMB-044",name:"Macomb Township",address:"21700 21 Mile Rd, Macomb, MI 48044",phone:"(586) 992-1800",owner:"James Kowalski",status:"offline",opened:"2016-02-09",salesToday:0,salesWeek:8420,openOrders:0,royaltyDue:168}
+];
+const SEED_ORDERS=[
+{id:1042,customer:"Michelle Vance",fulfill:"pickup",time:"6:14 PM",items:[{name:"2\u00d7 Detroit Style Pizza",mods:"Extra cheese, sauce, light pepperoni"},{name:"1\u00d7 Chicken Tenders",mods:"Ranch"}],total:58.97,status:"open",phone:"(586) 555-0142",extra:"Opted in"},
+{id:1043,customer:"James Kowalski",fulfill:"delivery",time:"6:02 PM",items:[{name:"1\u00d7 The Torpedo 12\"",mods:"No banana peppers"},{name:"1\u00d7 Square Cheese Tray",mods:""}],total:26.98,status:"printed",phone:"(586) 555-0198",extra:"214 Jefferson Cir"},
+{id:1044,customer:"Angela Reyes",fulfill:"pickup",time:"5:41 PM",items:[{name:"1\u00d7 Detroit Style Pizza",mods:"Extra sauce"},{name:"2\u00d7 Mozzarella Sticks",mods:""}],total:35.97,status:"fulfilled",phone:"(586) 555-0173",extra:""},
+{id:1045,customer:"Tom Bishara",fulfill:"delivery",time:"5:28 PM",items:[{name:"3\u00d7 Detroit Style Pizza",mods:"1 plain, 2 extra cheese + sauce"}],total:74.97,status:"open",phone:"(586) 555-0121",extra:"88 Crocker Blvd"},
+{id:1046,customer:"Priya Nair",fulfill:"pickup",time:"4:55 PM",items:[{name:"1\u00d7 The Torpedo 12\"",mods:"Extra oregano salt"},{name:"1\u00d7 Chicken Wings",mods:"Buffalo"}],total:20.98,status:"fulfilled",phone:"(586) 555-0165",extra:"Opted in"},
+{id:1047,customer:"Dave Okafor",fulfill:"pickup",time:"4:22 PM",items:[{name:"2\u00d7 Square Cheese Tray",mods:"Extra cheese on one"}],total:29.98,status:"printed",phone:"(586) 555-0110",extra:""}
+];
+function money(n){return "$"+Number(n||0).toLocaleString(undefined,{maximumFractionDigits:0})}
+function money2(n){return "$"+Number(n||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.style.display="block";clearTimeout(t._h);t._h=setTimeout(function(){t.style.display="none"},2200)}
+function loadStores(){try{const r=JSON.parse(localStorage.getItem(STORE_KEY)||"null");if(r&&r.length)return r}catch(e){}localStorage.setItem(STORE_KEY,JSON.stringify(SEED));return SEED.slice()}
+function saveStores(s){localStorage.setItem(STORE_KEY,JSON.stringify(s))}
+function isAuthed(){try{const a=JSON.parse(localStorage.getItem(AUTH_KEY)||"null");return a&&a.ok===true}catch(e){return false}}
+function route(){const h=(location.hash||"#login").replace(/^#/,"");const parts=h.split("?");return{page:parts[0]||"login",params:new URLSearchParams(parts[1]||"")}}
+function go(hash){location.hash=hash}
+window.Own={go:go,logout:function(){localStorage.removeItem(AUTH_KEY);go("login")},openStore:function(id){go("store?id="+encodeURIComponent(id))},setStatus:function(id,status){const stores=loadStores();const s=stores.find(function(x){return x.id===id});if(s){s.status=status;saveStores(stores);toast(id+" \u2192 "+status);render()}},addStore:function(ev){ev.preventDefault();const f=ev.target;const name=f.name.value.trim();const rec={id:(name.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,10)||"STORE")+"-"+(1000+Math.floor(Math.random()*9000)),name:name,owner:f.owner.value.trim(),address:f.address.value.trim(),phone:f.phone.value.trim(),status:f.status.value,opened:new Date().toISOString().slice(0,10),salesToday:0,salesWeek:0,openOrders:0,royaltyDue:0};const stores=loadStores();stores.unshift(rec);saveStores(stores);toast("Created "+rec.id);f.reset()},csv:function(){const stores=loadStores();const header="storeId,name,salesToday,salesWeek,royaltyDue,status";const body=stores.map(function(s){return [s.id,s.name,s.salesToday,s.salesWeek,s.royaltyDue,s.status].join(",")}).join("\n");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([header+"\n"+body],{type:"text/csv"}));a.download="ownhub-accounting.csv";a.click()}};
+var orderFilter="all",orderMap={};
+function ordersFor(id){if(!orderMap[id])orderMap[id]=SEED_ORDERS.map(function(o){return Object.assign({},o,{items:o.items.slice()})});return orderMap[id]}
+function getStore(id){return loadStores().find(function(s){return s.id===id})||{id:id||"HARRISON-001",name:"Harrison Township",status:"live",phone:"(586) 468-4779"}}
+function shell(active,inner){return '<header class="app-header"><div class="brand"><span class="logo-script">Buscemi\'s</span><span class="hub-tag">OwnHub</span></div><div class="header-right"><span class="status-live"><span class="dot"></span> Network live</span><span>'+OWNER.name+'</span><button class="logout-btn" onclick="Own.logout()">Log Out</button></div></header><nav class="admin-nav"><a href="#dashboard" class="'+(active==="dashboard"?"active":"")+'">All Stores</a><a href="#stores" class="'+(active==="stores"?"active":"")+'">Active Stores</a><a href="#add" class="'+(active==="add"?"active":"")+'">Add / Upload Stores</a><a href="#accounting" class="'+(active==="accounting"?"active":"")+'">Accounting</a></nav><main class="page">'+inner+"</main>"}
+function storeShell(store,active,inner){var idq=encodeURIComponent(store.id);return '<div class="store-banner"><span>Viewing as franchisee \u2014 '+store.name+" \u00b7 "+store.id+'</span><a href="#dashboard">\u2190 Back to OwnHub</a></div><header class="dash-header"><div><strong style="font-family:Fredoka,sans-serif;font-size:22px">'+store.name+"</strong><small>Store ID: "+store.id+'</small></div><div class="header-right"><span class="status-live"><span class="dot"></span> '+(store.status==="live"?"Live":store.status)+'</span><button class="logout-btn" onclick="Own.go(\'dashboard\')">Leave Store</button></div></header><nav class="admin-nav"><a href="#store?id='+idq+'" class="'+(active==="orders"?"active":"")+'">Orders</a><a href="#store-menu?id='+idq+'" class="'+(active==="menu"?"active":"")+'">Menu Items</a><a href="#store-export?id='+idq+'" class="'+(active==="export"?"active":"")+'">Export / Accounting</a></nav><main class="page">'+inner+"</main>"}
+function viewLogin(){document.body.className="auth";return '<div class="auth-card"><span class="logo-script">Buscemi\'s</span><div class="auth-kicker">OwnHub \u00b7 Franchisor</div><label>Owner email</label><input id="email" type="email" value="owner@buscemis.com"/><label>Owner PIN</label><input id="pin" type="password" value="2468"/><div class="err" id="login-error">Email or PIN is not recognized.</div><button class="btn btn-red" type="button" id="login-btn">Enter OwnHub</button><p class="hint">Demo: owner@buscemis.com \u00b7 PIN 2468</p></div>'}
+function viewDashboard(){var stores=loadStores();var live=stores.filter(function(s){return s.status==="live"}).length;var sales=stores.reduce(function(a,s){return a+s.salesToday},0);var week=stores.reduce(function(a,s){return a+s.salesWeek},0);var open=stores.reduce(function(a,s){return a+s.openOrders},0);var cards=stores.map(function(s){return '<article class="store-card" onclick="Own.openStore(\''+s.id+'\')"><div class="top"><h3>'+s.name+'</h3><span class="badge '+s.status+'">'+s.status+'</span></div><div><span class="sid">'+s.id+'</span></div><div class="meta">'+s.address+"<br>Franchisee: "+s.owner+'</div><div class="card-stats"><div><strong>'+money(s.salesToday)+"</strong>Today</div><div><strong>"+s.openOrders+"</strong>Open orders</div></div></article>"}).join("");return shell("dashboard",'<div class="page-head"><div><h1>All stores</h1><p>Click a card to open that location the way the franchisee sees it.</p></div><a class="btn btn-red btn-sm" href="#add">+ Add store</a></div><div class="kpi-row"><div class="kpi"><div class="lbl">Locations</div><div class="num">'+stores.length+'</div><div class="sub">'+live+' live</div></div><div class="kpi"><div class="lbl">Sales today</div><div class="num">'+money(sales)+'</div></div><div class="kpi"><div class="lbl">Sales this week</div><div class="num">'+money(week)+'</div></div><div class="kpi"><div class="lbl">Open tickets</div><div class="num">'+open+'</div></div></div><div class="store-grid">'+cards+"</div>")}
+function viewStores(){var stores=loadStores();var rows=stores.map(function(s){return "<tr><td><span class=\"sid\">"+s.id+"</span></td><td><strong>"+s.name+"</strong><div class=\"meta\">"+s.address+"</div></td><td>"+s.owner+"</td><td>"+s.phone+"</td><td><select onchange=\"Own.setStatus('"+s.id+"', this.value)\"><option"+(s.status==="live"?" selected":"")+">live</option><option"+(s.status==="onboarding"?" selected":"")+">onboarding</option><option"+(s.status==="offline"?" selected":"")+">offline</option></select></td><td><button class=\"btn btn-wood btn-sm\" onclick=\"Own.openStore('"+s.id+"')\">Open POS</button></td></tr>"}).join("");return shell("stores",'<div class="page-head"><div><h1>Active stores</h1><p>Every franchisee ID. Open a row to work that store POS.</p></div></div><section class="panel"><div style="overflow-x:auto"><table><thead><tr><th>Store ID</th><th>Location</th><th>Franchisee</th><th>Phone</th><th>Status</th><th></th></tr></thead><tbody>'+rows+"</tbody></table></div></section>")}
+function viewAdd(){return shell("add",'<div class="page-head"><div><h1>Add / upload stores</h1><p>Create one location. A unique Store ID is generated for the franchisee POS.</p></div></div><section class="panel"><h2>New store</h2><form class="form-grid" onsubmit="Own.addStore(event)"><div><label>Location name</label><input name="name" required placeholder="e.g. Shelby Township"/></div><div><label>Franchisee / manager</label><input name="owner" required placeholder="Full name"/></div><div class="full"><label>Address</label><input name="address" required placeholder="Street, city, state, zip"/></div><div><label>Phone</label><input name="phone" required placeholder="(586) 555-0100"/></div><div><label>Status</label><select name="status"><option value="onboarding">Onboarding</option><option value="live">Live</option><option value="offline">Offline</option></select></div><div class="full"><button class="btn btn-red btn-sm" type="submit">Create store + ID</button></div></form></section>')}
+function viewAccounting(){var stores=loadStores();var today=stores.reduce(function(a,s){return a+s.salesToday},0);var week=stores.reduce(function(a,s){return a+s.salesWeek},0);var roy=stores.reduce(function(a,s){return a+s.royaltyDue},0);var live=stores.filter(function(s){return s.status==="live"}).length;var rows=stores.map(function(s){return "<tr onclick=\"Own.go('store-export?id="+encodeURIComponent(s.id)+"')\" style=\"cursor:pointer\"><td><span class=\"sid\">"+s.id+"</span></td><td>"+s.name+"</td><td>"+money2(s.salesToday)+"</td><td>"+money2(s.salesWeek)+"</td><td>"+money2(s.royaltyDue)+"</td><td><span class=\"badge "+s.status+"\">"+s.status+"</span></td></tr>"}).join("");return shell("accounting",'<div class="page-head"><div><h1>Accounting</h1><p>Network rollup.</p></div><button class="btn btn-wood btn-sm" onclick="Own.csv()">Download CSV</button></div><div class="kpi-row"><div class="kpi"><div class="lbl">Network today</div><div class="num">'+money(today)+'</div></div><div class="kpi"><div class="lbl">Network week</div><div class="num">'+money(week)+'</div></div><div class="kpi"><div class="lbl">Royalties due</div><div class="num">'+money(roy)+'</div></div><div class="kpi"><div class="lbl">Live stores</div><div class="num">'+live+'</div></div></div><section class="panel"><div style="overflow-x:auto"><table><thead><tr><th>Store ID</th><th>Location</th><th>Today</th><th>Week</th><th>Royalty</th><th>Status</th></tr></thead><tbody>'+rows+"</tbody></table></div></section>")}
+window.Own.setFilter=function(f){orderFilter=f;render()};
+window.Own.setOrder=function(id,storeId,status){var o=ordersFor(storeId).find(function(x){return x.id===id});if(o){o.status=status;render()}};
+function viewStore(id){var store=getStore(id);var orders=ordersFor(store.id);var counts={all:orders.length,open:0,printed:0,fulfilled:0};orders.forEach(function(o){counts[o.status]++});var list=orders.filter(function(o){return orderFilter==="all"||o.status===orderFilter});var pills=["all","open","printed","fulfilled"].map(function(k){return '<div class="summary-pill '+(orderFilter===k?"active":"")+'" onclick="Own.setFilter(\''+k+'\')"><div class="num">'+counts[k]+'</div><div class="lbl">'+k+"</div></div>"}).join("");var cards=list.map(function(o){var items=o.items.map(function(i){return '<div class="item-line">'+i.name+(i.mods?" <em>\u2014 "+i.mods+"</em>":"")+"</div>"}).join("");var btn=o.status!=="fulfilled"?'<button class="action-btn fulfill" onclick="Own.setOrder('+o.id+",'"+store.id+"','fulfilled')\">Mark Fulfilled</button>":'<button class="action-btn reopen" onclick="Own.setOrder('+o.id+",'"+store.id+"','open')\">Reopen</button>";return '<article class="order-card"><div><h3 style="font-size:22px">#'+o.id+'</h3><div class="order-meta"><span class="badge '+o.fulfill+'">'+o.fulfill+"</span><span>"+o.time+"</span><strong>"+o.customer+"</strong></div>"+items+'<div class="total">'+money2(o.total)+'</div><div class="contact">'+o.phone+(o.extra?" \u00b7 "+o.extra:"")+'</div></div><div class="order-right"><span class="badge '+o.status+'">'+o.status+"</span>"+btn+"</div></article>"}).join("")||'<div class="empty-state">No orders in this view.</div>';return storeShell(store,"orders",'<div class="summary-row">'+pills+"</div>"+cards)}
+function viewMenu(id){var store=getStore(id);var items=[["Detroit Style Pizza","Famous Pizza",18.99],["The Torpedo 12\"","Famous Italian Subs",12.99],["Square Cheese Tray","Sides",9.99],["Chicken Wings","Wings",11.99],["Mozzarella Sticks","Sides",7.99]];var rows=items.map(function(it){return '<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line)"><div><strong>'+it[0]+'</strong><div class="meta">'+it[1]+"</div></div><strong>"+money2(it[2])+"</strong></div>"}).join("");return storeShell(store,"menu",'<section class="panel"><h2>Current menu</h2><p class="desc">Same menu screen the franchisee uses at this store.</p>'+rows+"</section>")}
+function viewExport(id){var store=getStore(id);var orders=ordersFor(store.id);var total=orders.reduce(function(a,o){return a+o.total},0);var rows=orders.map(function(o){return "<tr><td>#"+o.id+"</td><td>"+o.customer+"</td><td>"+o.fulfill+"</td><td>"+money2(o.total)+'</td><td><span class="badge '+o.status+'">'+o.status+"</span></td></tr>"}).join("");return storeShell(store,"export",'<section class="panel"><h2>Export / Accounting</h2><p class="desc">Store-level tickets for '+store.name+'.</p><div class="kpi-row"><div class="kpi"><div class="lbl">Orders</div><div class="num">'+orders.length+'</div></div><div class="kpi"><div class="lbl">Revenue</div><div class="num">'+money2(total)+'</div></div><div class="kpi"><div class="lbl">Average</div><div class="num">'+money2(total/orders.length)+'</div></div><div class="kpi"><div class="lbl">Store ID</div><div class="num" style="font-size:18px">'+store.id+'</div></div></div><table><thead><tr><th>Order</th><th>Customer</th><th>Fulfill</th><th>Total</th><th>Status</th></tr></thead><tbody>'+rows+"</tbody></table></section>")}
+function bindLogin(){var run=function(){var email=(document.getElementById("email").value||"").trim().toLowerCase();var pin=(document.getElementById("pin").value||"").trim();var ok=pin===PIN&&(email===OWNER.email||email.length>3);if(!ok){document.getElementById("login-error").style.display="block";return}localStorage.setItem(AUTH_KEY,JSON.stringify({ok:true,name:OWNER.name}));go("dashboard")};document.getElementById("login-btn").onclick=run;document.getElementById("pin").addEventListener("keydown",function(e){if(e.key==="Enter")run()})}
+function render(){var r=route();var app=document.getElementById("app");var authed=isAuthed();if(!authed&&r.page!=="login"){go("login");return}if(authed&&r.page==="login"){go("dashboard");return}document.body.className=r.page==="login"?"auth":"";if(r.page==="login"){app.innerHTML=viewLogin();bindLogin();return}if(r.page==="dashboard"){app.innerHTML=viewDashboard();return}if(r.page==="stores"){app.innerHTML=viewStores();return}if(r.page==="add"){app.innerHTML=viewAdd();return}if(r.page==="accounting"){app.innerHTML=viewAccounting();return}if(r.page==="store-menu"){app.innerHTML=viewMenu(r.params.get("id"));return}if(r.page==="store-export"){app.innerHTML=viewExport(r.params.get("id"));return}if(r.page==="store"){app.innerHTML=viewStore(r.params.get("id"));return}app.innerHTML=viewDashboard()}
+window.addEventListener("hashchange",render);
+render();
+})();
+</script>
 </body>
 </html>
